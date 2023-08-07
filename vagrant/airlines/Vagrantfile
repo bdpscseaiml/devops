@@ -64,7 +64,12 @@ Vagrant.configure("2") do |config|
   # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
   # documentation for more information about their specific syntax and use.
    config.vm.provision "shell", inline: <<-SHELL
+
 sudo -i
+
+##Change the user to 'ubuntu' if you are using this script for Amazon ec2 ubuntu instance.
+currentUser=vagrant
+
 apt-get update
 apt-get install default-jdk default-jre -y
 apt-get install maven -y
@@ -77,12 +82,12 @@ mysql -u root -e 'GRANT ALL ON airlines.* TO "airuser"@"%";'
 mysql -u root -e 'FLUSH PRIVILEGES;'
 mysql -u root -e 'exit'
 
-git clone https://github.com/bdpscseaiml/airlines.git /home/vagrant/airlines 2> /dev/null
-cd /home/vagrant/airlines
+git clone https://github.com/bdpscseaiml/airlines.git /home/$currentUser/airlines 2> /dev/null
+cd /home/$currentUser/airlines
 mysql -u airuser -ppassword airlines < sample_data.sql 2> /dev/null
 mvn clean install -DskipTests
 mv /var/lib/tomcat9/webapps/ROOT /var/lib/tomcat9/webapps/ROOT_BACKUP 2> /dev/null
-cp /home/vagrant/airlines/target/airlines.war /var/lib/tomcat9/webapps/ROOT.war
+cp /home/$currentUser/airlines/target/airlines.war /var/lib/tomcat9/webapps/ROOT.war
 service tomcat9 restart
 
    SHELL
