@@ -1,0 +1,21 @@
+---
+- name: Webserver setup
+  hosts: db01
+  become: yes
+  tasks:
+    - name: Install Apache2
+      ansible.builtin.apt:
+        name: apache2
+        state: present
+
+    - name: Start Apache2
+      ansible.builtin.service:
+        name: apache2
+        state: started
+        enabled: yes
+    
+    - name: Copy index file
+      ansible.builtin.copy:
+        src: ../src/index.html
+        dest: /var/www/html/index.html
+        backup: yes
