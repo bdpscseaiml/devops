@@ -13,6 +13,10 @@ all:
       ansible_host: 192.168.56.12
       ansible_user: vagrant
       ansible_ssh_private_key_file: /home/ramesh/vagrant/ubuntu22/.vagrant/machines/default/virtualbox/private_key
+    ec2_live:
+      ansible_host: 18.142.105.40
+    ec2_dev:
+      ansible_host: 13.214.151.105
 
   children:
     webservers:
@@ -22,6 +26,13 @@ all:
     dbservers:
       hosts:
         db01:
+    ec2servers:
+      hosts:
+        ec2_live:
+        ec2_dev:
+      vars:
+        ansible_user: ubuntu
+        ansible_ssh_private_key_file: keys/ec2/airlines-ec2/airkey.pem
     allservers:
       children:
         webservers:
