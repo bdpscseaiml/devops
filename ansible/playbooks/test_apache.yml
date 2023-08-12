@@ -1,0 +1,30 @@
+---
+- name: Install Apache2 on Ubuntu
+  hosts: ec2_dev
+  become: yes  # This allows the playbook to use sudo
+  tasks:
+    - name: Update apt cache
+      apt: update_cache=yes
+
+    - name: Install Apache2
+      apt: name=apache2 state=present
+
+- name: Install MariaDB on Ubuntu
+  hosts: ec2_dev
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt: update_cache=yes
+
+    - name: Install MariaDB Server
+      apt:
+        name:
+          - mariadb-server
+          - python3-pymysql  # Optional, if you're using Python's pymysql library
+        state: present
+
+    - name: Start and enable MariaDB service
+      systemd:
+        name: mysql
+        state: started
+        enabled: yes
