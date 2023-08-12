@@ -1,6 +1,6 @@
 ---
 - name: Webserver setup
-  hosts: db01
+  hosts: ec2_dev
   become: yes
   tasks:
     - name: Remove apache
@@ -9,7 +9,7 @@
         state: absent
 
 - name: Remove mysql
-  hosts: db01
+  hosts: ec2_dev
   become: yes
   tasks:
     - name: Remove mysql Server

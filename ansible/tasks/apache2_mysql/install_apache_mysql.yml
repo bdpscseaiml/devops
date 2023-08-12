@@ -1,0 +1,46 @@
+---
+- name: Webserver setup
+  hosts: ec2_dev
+  become: yes
+  tasks:
+    - name: Install apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Start apache service
+      service: 
+        name: apache2
+        state: started
+        enabled: yes
+
+
+- name: Database server
+  hosts: ec2_dev
+  become: yes
+  tasks:
+    - name: Install Mariadb server
+      apt:
+        name: mariadb-server
+        state: present
+    
+    - name: Start Mariadb server
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+    
+    - name: Create a database with name 'Wordpress'
+      mysql_db:
+        name: wordpress
+        state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    - name: Create a databse user and with privileges
+      community.mysql.mysql_user:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        state: present
+        name: wpuser
+        password: admin@123
+        priv:
+          'wordpress.*': 'ALL,GRANT'
