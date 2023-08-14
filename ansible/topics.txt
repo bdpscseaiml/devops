@@ -1,0 +1,11 @@
+Ansible inventory parameters/variables
+https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html
+
+Adhoc Commands
+https://docs.ansible.com/ansible/latest/command_guide/intro_adhoc.html
+
+Playbook & placing ansible.cfg file inside the same folder
+https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html
+
+
+Ansible Fact Variables & runtime varaibles

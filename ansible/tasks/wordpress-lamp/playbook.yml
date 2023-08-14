@@ -1,8 +1,8 @@
 #########################################################
-# DO Community Playbooks: Wordpress on Ubuntu 18.04 LAMP
+# DO Community Playbooks: Wordpress on Ubuntu 22.04 LAMP
 #########################################################
 ---
-- hosts: ec2_dev
+- hosts: ec2_live
   become: true
   vars_files:
     - vars/default.yml

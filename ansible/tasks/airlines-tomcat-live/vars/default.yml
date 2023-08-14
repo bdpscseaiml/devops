@@ -1,0 +1,9 @@
+---
+#User details
+username: vagrant
+
+#MySQL Settings
+mysql_root_password: "mysql_root_password"
+mysql_db: "airlines"
+mysql_user: "airuser"
+mysql_password: "password"

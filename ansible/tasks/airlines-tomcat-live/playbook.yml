@@ -1,0 +1,105 @@
+#########################################################
+# DO Community Playbooks: Wordpress on Ubuntu 22.04 LAMP
+#########################################################
+---
+- hosts: ubuntu22
+  become: true
+  # become_user: "{{ username }}"
+  vars_files:
+    - vars/default.yml
+
+  tasks:
+    - name: Install prerequisites
+      apt:
+        name: aptitude
+        update_cache: yes
+        state: latest
+        force_apt_get: yes
+      tags:
+        - system
+
+    - name: Install Tomcat Packages
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+        state: latest
+      loop:
+        - "default-jdk"
+        - "default-jre"
+        - "maven"
+        - "tomcat9"
+        - "tomcat9-admin"
+        - "mariadb-server"
+        - "python3-pymysql" # required for managing mysql using python(ansible)
+      tags:
+        - system
+
+    # Github & maven build
+    - name: Checkout airlines repository from git
+      git:
+        repo: https://github.com/bdpscseaiml/airlines
+        dest: "/home/{{ username }}/airlines"
+      tags:
+        - github
+        - maven-build
+
+    - name: Maven build
+      shell: "cd /home/{{ username }}/airlines && mvn clean package -DskipTests"
+      register: maven_output
+      tags:
+        - github
+        - maven-build
+
+    - name: Maven output
+      debug:
+        var: maven_output
+      tags:
+        - maven-build
+
+    - name: Copy airlines war to tomcat directory
+      shell: "cp /home/{{ username }}/airlines/target/airlines.war /var/lib/tomcat9/webapps/ROOT.war"
+      tags:
+        - maven-build
+
+    - name: Restart tomcat server
+      service:
+        name: tomcat9
+        state: restarted
+      tags:
+        - maven-build
+
+    # MySQL Configuration
+
+    - name: Install Mariadb server
+      apt:
+        name: mariadb-server
+        state: present
+      tags:
+        - mysql
+
+    - name: Start Mariadb server
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+      tags:
+        - mysql
+
+    - name: Create a database with name 'Airlines'
+      mysql_db:
+        name: "{{ mysql_db }}"
+        state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+      tags:
+        - mysql
+
+    - name: Create a databse user and with privileges
+      community.mysql.mysql_user:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        state: present
+        name: "{{ mysql_user }}"
+        password: "{{ mysql_password }}"
+        priv:
+          "airlines.*": "ALL,GRANT"
+      tags:
+        - mysql

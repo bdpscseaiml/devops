@@ -8,6 +8,10 @@ ansible db01 -m ansible.builtin.apt -a "name=apache2 state=present" -i inventory
 # ansible.builtin.copy
 ansible db01 -m ansible.builtin.copy -a "src=src/index.html dest=/var/www/html/index.html" -i inventory/inventory_group.yml --become
 
+# Gethering facts using adhoc command
+# Fact variables
+ansible db01 -m ansible.builtin.setup
+
 # Run the ansible-playbook
 ansible-playbook -i inventory/inventory_group.yml playbooks/install_apache_mysql.yml
 ansible-playbook -i inventory/inventory_group.yml playbooks/install_apache_mysql.yml -v

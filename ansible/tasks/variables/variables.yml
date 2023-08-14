@@ -1,0 +1,50 @@
+---
+- name: Database server
+  hosts: ec2_dev
+  become: yes
+  ##Defining variable inside the playbook
+  vars:
+    dbname: wordpress
+    dbuser: wpuser
+    dbpassword: admin@123
+
+  tasks:
+    # Printing the dbuser using debug
+    - name: Printing the name of database
+      debug:
+        msg: dbname
+
+    # Printing the dbuser using debug
+    - debug:
+        msg: "The username is {{ dbuser }}"
+
+    - name: Install Mariadb server
+      apt:
+        name: mariadb-server
+        state: present
+
+    - name: Start Mariadb server
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name: Create a database with name 'Wordpress'
+      mysql_db:
+        name: "{{ dbname }}"
+        state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    - name: Create a databse user and with privileges
+      community.mysql.mysql_user:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        state: present
+        name: "{{ dbuser }}"
+        password: "{{ dbpassword }}"
+        priv:
+          "wordpress.*": "ALL,GRANT"
+      register: mariadb_output
+
+    - name: Printing the Mariadb output
+      debug:
+        var: mariadb_output
