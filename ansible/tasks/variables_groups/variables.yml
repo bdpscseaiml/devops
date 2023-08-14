@@ -1,0 +1,19 @@
+---
+- name: Database server
+  hosts: all
+  become: yes
+  ##Defining variable inside the playbook
+  # vars:
+  #  username: userInBuilt
+  #  comment: comments inside playbook
+
+  tasks:
+    # Printing the username using debug
+    - name: Printing the username from variables file
+      debug:
+        msg: "{{ username }}"
+
+    # Printing the comment
+    - name: Printing the comment from variables file
+      debug:
+        msg: "{{ comment }}"
