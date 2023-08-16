@@ -1,5 +1,5 @@
 ---
-- name: Database server
+- name: Testing Variable groups
   hosts: all
   become: yes
   ##Defining variable inside the playbook
