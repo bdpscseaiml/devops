@@ -1,0 +1,94 @@
+#########################################################
+# DO Community Playbooks: Wordpress on Ubuntu 22.04 LAMP
+#########################################################
+---
+- hosts: ec2_live
+  become: true
+  vars_files:
+    - vars/default.yml
+
+  tasks:
+    - name: UnInstall prerequisites
+      apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
+      tags: [system]
+
+    - name: Install MYSQL Packages
+      apt: name={{ item }} update_cache=yes state=present
+      loop:
+        [
+          "mariadb-server",
+          "python3-pymysql",
+        ]
+      tags: [system]
+
+
+    - name: Uninstall LAMP Packages
+      apt: name={{ item }} update_cache=yes state=absent
+      loop:
+        [
+          "apache2",
+          "php",
+          "php-mysql",
+          "libapache2-mod-php",
+        ]
+      tags: [system]
+
+    - name: Uninstall PHP Extensions
+      apt: name={{ item }} update_cache=yes state=absent
+      loop: "{{ php_modules }}"
+      tags: [system]
+
+    # Apache Configuration
+    - name: Remove Apache VirtualHost
+      file:
+        path: "/etc/apache2/sites-available/{{ http_conf }}"
+        state: absent
+      tags: [apache]
+
+
+    # MySQL Configuration
+
+    - name: Install Mariadb server
+      apt:
+        name: mariadb-server
+        state: present
+
+    - name: Start Mariadb server
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+
+    - name: "Delete a database with name {{ mysql_db}}"
+      mysql_db:
+        name: "{{ mysql_db }}"
+        state: absent
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    - name: Create a databse user and with privileges
+      community.mysql.mysql_user:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        state: absent
+        name: "{{ mysql_user }}"
+        password: "{{ mysql_password }}"
+
+
+    - name: Install Mariadb server
+      apt:
+        name: mariadb-server
+        state: absent  
+
+    - name: Install Mariadb server
+      file:
+        path: "/var/www/{{ http_host }}"
+        state: absent
+
+    - name: Uninstall Mysql Packages
+      apt: name={{ item }} update_cache=yes state=absent
+      loop:
+        [
+          "mariadb-server",
+          "python3-pymysql",
+        ]
+      tags: [system]
