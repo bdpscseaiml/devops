@@ -1,0 +1,15 @@
+---
+- name: Installing apche2 & copying a file
+  hosts:
+    - ubuntu22
+
+  tasks:
+    - name: Apache2 installation
+      apt:
+        name: apache2
+        state: present
+        
+    - name: Copying a file
+      copy:
+        src: topics.txt
+        dest: topic2.txt

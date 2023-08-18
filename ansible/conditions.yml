@@ -1,0 +1,42 @@
+---
+- name: Installing HTTP server
+  hosts: centos9
+  become: yes
+
+  tasks:
+    # - name: Installing apache2 using apt package manager
+    #   apt:
+    #     name: apache2
+    #     state: present
+    #   when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Installing apach2 using yum package manager
+      yum:
+        name: httpd
+        state: latest
+      register: apache_output
+      x`tags:
+        - system
+
+    - name: Printing the apache output
+      debug:
+        msg: "{{ apache_output }}"
+      tags:
+        - apache
+
+    - name: os version
+      debug:
+        var: ansible_facts
+
+      tags:
+        - system
+      # when: ansible_facts['distribution'] == 'CentOS'
+
+    # - name: Installing apche2 & mariadb server using yum package manager
+    #   yum:
+    #     name: "{{item}}"
+    #     state: present
+    #   loop:
+    #     - httpd
+    #     - mariadb-server
+    #   when: ansible_facts['distribution'] == 'CentOS'
