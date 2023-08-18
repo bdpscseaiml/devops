@@ -12,6 +12,8 @@ ansible db01 -m ansible.builtin.copy -a "src=src/index.html dest=/var/www/html/i
 # Fact variables
 ansible db01 -m ansible.builtin.setup
 
+ansible ec2servers -m  setup > ~/Desktop/facts.txt
+
 # Run the ansible-playbook
 ansible-playbook -i inventory/inventory_group.yml playbooks/install_apache_mysql.yml
 ansible-playbook -i inventory/inventory_group.yml playbooks/install_apache_mysql.yml -v
@@ -26,3 +28,5 @@ ansible-playbook -i inventory/inventory_group.yml playbooks/install_apache_mysql
 
 # Dryrun  Checks of syntax execution before actually running the script ansible-playbook
 ansible-playbook -i inventory/inventory_group.yml playbooks/install_apache_mysql.yml -C
+
+# tAgs

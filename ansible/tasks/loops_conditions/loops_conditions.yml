@@ -1,0 +1,25 @@
+---
+- name: Checking loops and conditions
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Updating apt
+      apt:
+        update_cache: yes
+        state: latest
+        force_apt_get: yes
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Updating yum
+      debug:
+        msg: "The os is {{ ansible_facts['distribution']}} and Ip is {{ansible_facts['default_ipv4']}}"
+
+    - name: Printing loop
+      debug:
+        msg: "{{item}}"
+      loop:
+        - First
+        - Second
+        - Third
+      tags: [loop]

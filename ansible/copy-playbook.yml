@@ -1,0 +1,12 @@
+---
+- name: Playbook copy demo
+  hosts: 
+    - ubuntu22
+
+  tasks:
+    - name: Copying a single file
+      ansible.builtin.copy:
+        src: topics.txt
+        dest: topics.txt
+
+  

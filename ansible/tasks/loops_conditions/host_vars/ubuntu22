@@ -1,0 +1,2 @@
+username: ubuntu22user
+comment: This varaible is from host_vars/ubuntu22 file

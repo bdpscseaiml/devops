@@ -1,22 +1,18 @@
 ---
 all:
   hosts:
-    web01:
-      ansible_host: 192.168.56.10
-      ansible_user: vagrant
-      ansible_ssh_private_key_file: ~/devops/vagrant/airlines/.vagrant/machines/default/virtualbox/private_key
-    web02:
-      ansible_host: 192.168.56.11
-      ansible_user: vagrant
-      ansible_ssh_private_key_file: ~/devops/vagrant/jenkins/.vagrant/machines/default/virtualbox/private_key
-    db01:
-      ansible_host: 192.168.56.13
+    ubuntu22:
+      ansible_host: 192.168.56.19
       ansible_user: vagrant
       ansible_ssh_private_key_file: ~/devops/vagrant/ubuntu22/.vagrant/machines/default/virtualbox/private_key
     ec2_live:
       ansible_host: 18.142.105.40
+      ansible_user: ubuntu
+      ansible_ssh_private_key_file: keys/ec2/airlines-ec2/airkey.pem
     ec2_dev:
       ansible_host: 13.214.151.105
+      ansible_user: ubuntu
+      ansible_ssh_private_key_file: keys/ec2/airlines-ec2/airkey.pem
 
   children:
     webservers:
@@ -32,7 +28,7 @@ all:
         ec2_dev:
       vars:
         ansible_user: ubuntu
-        ansible_ssh_private_key_file: ../keys/ec2/airlines-ec2/airkey.pem
+        ansible_ssh_private_key_file: keys/ec2/airlines-ec2/airkey.pem
     allservers:
       children:
         webservers:

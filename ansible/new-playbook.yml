@@ -1,0 +1,11 @@
+---
+- name: Installing apche2
+  hosts: 
+    - ubuntu22
+
+  tasks:
+    - name: wesbserver installation
+      ansible.builtin.yum:
+        name: apache2
+        state: present
+

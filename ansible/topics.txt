@@ -1,3 +1,5 @@
+
+
 Ansible inventory parameters/variables
 https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html
 
@@ -9,3 +11,6 @@ https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html
 
 
 Ansible Fact Variables & runtime varaibles
+
+Tags
+ansible-playbook loops_conditions.yml --tags=loop

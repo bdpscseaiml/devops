@@ -1,0 +1,37 @@
+---
+all:
+  hosts:
+    ubuntu22:
+      ansible_host: 192.168.56.19
+      ansible_user: vagrant
+      ansible_ssh_private_key_file: ~/devops/vagrant/ubuntu22/.vagrant/machines/default/virtualbox/private_key
+    ubuntu_new:
+      ansible_host: 192.168.56.20
+      ansible_user: vagrant
+      ansible_ssh_private_key_file: ~/devops/vagrant/ubuntu_new/.vagrant/machines/default/virtualbox/private_key
+    centos9:
+      ansible_host: 192.168.56.21
+      ansible_user: vagrant
+      ansible_ssh_private_key_file: ~/devops/vagrant/centos9/.vagrant/machines/default/virtualbox/private_key
+    ec2_live:
+      ansible_host: 18.142.105.40
+    ec2_dev:
+      ansible_host: 13.214.151.105
+
+  children:
+    webservers:
+      hosts:
+        ubuntu22:
+        ubuntu_new:
+        centos9:
+    ec2servers:
+      hosts:
+        ec2_live:
+        ec2_dev:
+      vars:
+        ansible_user: ubuntu
+        ansible_ssh_private_key_file: ../../keys/ec2/airlines-ec2/airkey.pem
+    allservers:
+      children:
+        webservers:
+        ec2servers:
